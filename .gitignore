@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.egg-info/
+cache/maps_saved_places.json
+cache/maps_screenshots.json
+.env
