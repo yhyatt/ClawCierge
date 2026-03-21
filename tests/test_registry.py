@@ -99,9 +99,9 @@ def test_city_routing_derived():
     assert CITY_ROUTING.get("nyc") == ["resy", "opentable"]
     assert CITY_ROUTING.get("new-york") == ["resy", "opentable"]
     
-    # Bucharest
-    assert CITY_ROUTING.get("bucharest") == ["bookingham", "thefork"]
-    assert CITY_ROUTING.get("buc") == ["bookingham", "thefork"]
+    # Bucharest (now includes opentable as fallback)
+    assert CITY_ROUTING.get("bucharest") == ["bookingham", "thefork", "opentable"]
+    assert CITY_ROUTING.get("buc") == ["bookingham", "thefork", "opentable"]
 
 
 def test_recommender_michelin_slugs_derived():

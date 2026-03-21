@@ -140,12 +140,15 @@ def search_and_format(
                     lines.append(f"    🔗 {m['booking_url']}")
         lines.append("")
 
-    # ── OpenTable / Resy (USA) ────────────────────────────────────────────────
+    # ── OpenTable / Resy ────────────────────────────────────────────────────────
     if "opentable" in platforms or "resy" in platforms:
-        lines.append("*🇺🇸 NYC — Resy / OpenTable:*")
-        url = ot_search_url(city.replace(" ", "-").lower(), covers=size, date=date_iso, time=time_hh_mm)
+        is_nyc = city_lower in ("new york", "new-york", "nyc")
+        label = "*🇺🇸 NYC — Resy / OpenTable:*" if is_nyc else "*🌍 OpenTable (worldwide):*"
+        lines.append(label)
+        url = ot_search_url(city_lower, covers=size, date=date_iso, time=time_hh_mm)
         lines.append(f"🔗 OpenTable: {url}")
-        lines.append(f"🔗 Resy: https://resy.com/cities/new-york?date={date_iso}&party_size={size}")
+        if is_nyc:
+            lines.append(f"🔗 Resy: https://resy.com/cities/new-york?date={date_iso}&party_size={size}")
         lines.append("")
 
     # ── Michelin Summary ─────────────────────────────────────────────────────

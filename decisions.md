@@ -1,6 +1,6 @@
 # Reservation Skill — Decisions & Open Questions
 
-**Last updated:** 2026-03-01
+**Last updated:** 2026-03-21
 
 ---
 
@@ -18,6 +18,8 @@
 | D8 | **Israel = Maps + Time Out** | Michelin doesn't cover Israel (confirmed). אופטיקאי מדופלם is a strategy blog, not restaurant guide. |
 | D9 | **TheFork = browser handoff** | DataDome makes direct API impossible without Playwright setup |
 | D10 | **OTP for Tabit booking** | Required by platform. Flow: `request_otp()` → ask user → `verify_otp()` → `confirm_booking()` |
+| D11 | **Bucharest = Bookingham primary, TheFork secondary, OpenTable fallback** | Bookingham.ro is local primary. TheFork has limited coverage (international hotels only). OpenTable as fallback for international chain restaurants. |
+| D12 | **OpenTable is worldwide (not NYC-only)** | Uses metroId for known US cities (NYC=4, Chicago=2, LA=3, etc.), term-based search for international cities. |
 
 ---
 

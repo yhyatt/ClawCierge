@@ -1,9 +1,9 @@
 """
-OpenTable / Resy client — USA (NYC focus) 🇺🇸
-===============================================
+OpenTable / Resy client — Worldwide 🌍 (USA metro IDs, term-based for international)
+=====================================================================================
 Direct API returns 403. Browser co-pilot is the only path.
 
-OpenTable: General USA restaurants, worldwide
+OpenTable: Worldwide restaurant booking
 Resy:      Dominant in NYC for top-tier restaurants (Don Angie, Lilia, Via Carota, etc.)
 
 Both are browser-handoff only. We construct pre-filled URLs.
@@ -13,11 +13,53 @@ import requests
 OT_BASE = "https://www.opentable.com"
 RESY_BASE = "https://resy.com"
 
+# OpenTable metro IDs for US cities (discovered via OpenTable web UI)
+# International cities use term-based search (no metroId)
+OT_METRO_IDS = {
+    "new-york":      4,
+    "new york":      4,
+    "nyc":           4,
+    "chicago":       2,
+    "los angeles":   3,
+    "los-angeles":   3,
+    "san francisco": 5,
+    "san-francisco": 5,
+    "boston":        6,
+    "washington":    7,
+    "miami":         8,
+    # International cities — no metroId; use term-based search
+    # bucharest, rome, paris, barcelona, london, etc. → no metroId
+}
+
 
 def get_restaurant_search_url(city: str, query: str = "", covers: int = 2,
                                date: str = "", time: str = "") -> str:
-    """OpenTable search URL for a city."""
-    url = f"{OT_BASE}/s?term={requests.utils.quote(query or 'restaurant')}&metroId=4"
+    """
+    OpenTable search URL for any city worldwide.
+    
+    Uses metroId for known US cities, term-based search for international.
+    
+    Args:
+        city: City name (case-insensitive)
+        query: Restaurant name or cuisine query
+        covers: Party size
+        date: YYYY-MM-DD format
+        time: HH:MM format
+        
+    Returns:
+        Pre-filled OpenTable search URL for browser handoff.
+    """
+    metro_id = OT_METRO_IDS.get(city.lower())
+    term = requests.utils.quote(query or "restaurant")
+    
+    if metro_id:
+        # US city with known metroId
+        url = f"{OT_BASE}/s?metroId={metro_id}&term={term}"
+    else:
+        # International / unknown cities: use city name as search term
+        city_term = requests.utils.quote(f"{query or 'restaurant'} {city}".strip())
+        url = f"{OT_BASE}/s?term={city_term}"
+    
     if covers:
         url += f"&covers={covers}"
     if date:
