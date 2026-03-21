@@ -147,10 +147,10 @@ class TestBucharestCityRegistry:
         cfg = get_city("bucharest")
         assert "bookingham" in cfg.reservation_platforms
 
-    def test_bucharest_routing_includes_thefork(self):
-        """Bucharest routing includes thefork as secondary."""
+    def test_bucharest_routing_excludes_thefork(self):
+        """TheFork removed from Bucharest — redirects to Paris (verified 2026-03-21)."""
         cfg = get_city("bucharest")
-        assert "thefork" in cfg.reservation_platforms
+        assert "thefork" not in cfg.reservation_platforms
 
     def test_bucharest_not_michelin_indexed(self):
         """Romania is not Michelin indexed."""
@@ -187,15 +187,15 @@ class TestBucharestUnified:
         assert "Bookingham" in result
         assert "bookingham.ro" in result
 
-    def test_search_and_format_bucharest_shows_thefork(self):
-        """Bucharest search also shows TheFork link."""
+    def test_search_and_format_bucharest_no_thefork(self):
+        """Bucharest search must NOT show TheFork (redirects to Paris)."""
         result = unified.search_and_format(
             city="bucharest",
             date="2026-04-15",
             time="19:30",
             size=2,
         )
-        assert "TheFork" in result
+        assert "TheFork" not in result  # TheFork broken for Bucharest
 
     def test_browser_handoff_bookingham(self):
         """get_browser_handoff_url works for bookingham."""
@@ -232,9 +232,9 @@ class TestBucharestUnified:
 class TestTheForkBucharest:
     """Tests for TheFork Bucharest coverage."""
 
-    def test_thefork_has_bucharest_slug(self):
-        """TheFork CITY_SLUGS includes Bucharest."""
-        assert "bucharest" in THEFORK_CITY_SLUGS or "bucuresti" in THEFORK_CITY_SLUGS
+    def test_thefork_bucharest_slug_is_none(self):
+        """TheFork Bucharest slug must be None — redirects to Paris (verified 2026-03-21)."""
+        assert THEFORK_CITY_SLUGS.get("bucharest") is None
 
     def test_thefork_bucharest_search_url(self):
         """TheFork search URL works for Bucharest."""

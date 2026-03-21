@@ -16,7 +16,8 @@ def test_bucharest_routing():
     cfg = get_city("bucharest")
     assert cfg is not None
     assert "bookingham" in cfg.reservation_platforms
-    assert "thefork" in cfg.reservation_platforms
+    assert "thefork" not in cfg.reservation_platforms  # TheFork removed: redirects to Paris (verified 2026-03-21)
+    assert "opentable" in cfg.reservation_platforms
     # Bookingham should be primary (first)
     assert cfg.reservation_platforms[0] == "bookingham"
 
@@ -100,8 +101,8 @@ def test_city_routing_derived():
     assert CITY_ROUTING.get("new-york") == ["resy", "opentable"]
     
     # Bucharest (now includes opentable as fallback)
-    assert CITY_ROUTING.get("bucharest") == ["bookingham", "thefork", "opentable"]
-    assert CITY_ROUTING.get("buc") == ["bookingham", "thefork", "opentable"]
+    assert CITY_ROUTING.get("bucharest") == ["bookingham", "opentable"]  # TheFork removed: redirects to Paris
+    assert CITY_ROUTING.get("buc") == ["bookingham", "opentable"]
 
 
 def test_recommender_michelin_slugs_derived():

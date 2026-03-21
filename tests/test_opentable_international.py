@@ -107,11 +107,12 @@ class TestBucharestRoutingIncludesOpenTable:
         assert "opentable" in cfg.reservation_platforms
 
     def test_bucharest_opentable_is_fallback(self):
-        """OpenTable should be after bookingham and thefork."""
+        """OpenTable should be after bookingham (thefork removed for Bucharest)."""
         cfg = get_city("bucharest")
         platforms = cfg.reservation_platforms
         assert platforms.index("bookingham") < platforms.index("opentable")
-        assert platforms.index("thefork") < platforms.index("opentable")
+        assert "thefork" not in platforms  # TheFork removed: redirects to Paris
+        assert "opentable" in platforms
 
 
 class TestUnifiedLabels:
