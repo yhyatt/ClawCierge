@@ -721,6 +721,86 @@ CURATED: dict[str, list[dict]] = {
         {"name": "CTC Urban Gastronomy", "cuisine": "Modern / Gazi", "notes": "Yonatan's saved. Gazi area.", "from_maps": True},
         {"name": "Cerdo Negro 1985", "cuisine": "Bar / Gazi", "notes": "Yonatan's saved.", "from_maps": True},
     ],
+
+    # ─── Bucharest (Ariel + Siuki live here) ─────────────────────────────────
+    "bucharest": [
+        {
+            "name": "NOUA",
+            "cuisine": "Modern Romanian / Creative",
+            "address": "Bd. Dacia 25, near Piața Romană",
+            "notes": "The best restaurant in Bucharest. Only fresh local ingredients. Fine dining prices (~€75 tasting menu without wine). Reservation required — weekends fully booked.",
+            "booking_platform": "bookingham",
+            "kai_pick": True,
+        },
+        {
+            "name": "Kaiamo",
+            "cuisine": "Fine Dining / Creative",
+            "address": "Str. Ermil Pangratti, Bucharest",
+            "notes": "Sophisticated fine dining, city centre. Pricier option.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Kane",
+            "cuisine": "Contemporary / Creative",
+            "notes": "Pricier option, highly regarded locally.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "deSoi",
+            "cuisine": "Romanian / Contemporary",
+            "notes": "Local favourite. Community top pick.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Ierbar",
+            "cuisine": "Modern Romanian",
+            "notes": "Local favourite. Fresh, seasonal.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "La Hambar",
+            "cuisine": "Romanian Traditional",
+            "address": "Outside Bucharest (worth the trip)",
+            "notes": "Traditional Romanian farmhouse restaurant. Day trip. Book ahead.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Lacrimi și Sfinți",
+            "cuisine": "Romanian / Mediterranean",
+            "notes": "Translation: Tears and Saints. Known local experience, traditional setting.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Caru' cu Bere",
+            "cuisine": "Romanian Traditional / Beer Hall",
+            "notes": "Historic beer hall, grand interior. Classic Bucharest experience.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Hanu' lui Manuc",
+            "cuisine": "Romanian Traditional",
+            "notes": "Manuc's Inn. Historic inn, traditional Romanian cuisine.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Le Bistrot Français",
+            "cuisine": "French",
+            "notes": "Signed by a 2-Michelin-star chef (Tom Meyer). Upscale French in Bucharest.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Mom",
+            "cuisine": "Burgers / Comfort Food",
+            "notes": "Amazing burgers, top-notch food. More casual. Reddit community favourite.",
+            "booking_platform": "bookingham",
+        },
+        {
+            "name": "Bucătăria local.food",
+            "cuisine": "Romanian / Local",
+            "notes": "Community pick. Local and seasonal.",
+            "booking_platform": "bookingham",
+        },
+    ],
 }
 
 

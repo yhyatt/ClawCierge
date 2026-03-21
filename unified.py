@@ -32,6 +32,7 @@ import ontopo
 import tabit
 import recommender
 import maps
+import bookingham
 from thefork import get_city_search_url as thefork_search_url, get_availability_url as thefork_avail_url
 from opentable import get_restaurant_search_url as ot_search_url, get_booking_url as ot_booking_url, NYC_KNOWN
 
@@ -115,6 +116,13 @@ def search_and_format(
                 lines.append(f"• {v.get('title', query)} — could not resolve slug")
         lines.append("")
 
+    # ── Bookingham (Romania) ────────────────────────────────────────────────
+    if "bookingham" in platforms:
+        lines.append("*🇷🇴 Bookingham (browser booking):*")
+        city_url = bookingham.get_city_search_url(city_lower, covers=size, date=date_iso, time=time_hh_mm)
+        lines.append(f"🔗 {city_url}")
+        lines.append("")
+
     # ── TheFork (Europe) ─────────────────────────────────────────────────────
     if "thefork" in platforms:
         lines.append("*🇪🇺 TheFork (browser booking):*")
@@ -180,6 +188,8 @@ def _get_booking_url(restaurant: dict, city: str, date: str, time: str, size: in
         return bk.get("url", f"https://www.opentable.com/s?term={restaurant['name']}")
     if platform == "mozrest":
         return f"https://www.mozrest.com/search?q={restaurant['name']}&city={city}"
+    if platform == "bookingham":
+        return bookingham.get_restaurant_url(restaurant["name"], city)
     return ""
 
 
@@ -262,4 +272,8 @@ def get_browser_handoff_url(platform: str, city: str = "", restaurant_url: str =
         return url
     if platform == "tabit":
         return tabit.get_copilot_url("")
+    if platform == "bookingham":
+        if restaurant_url:
+            return restaurant_url  # direct restaurant link
+        return bookingham.get_city_search_url(city, covers=size, date=date, time=time)
     return ""

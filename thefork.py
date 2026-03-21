@@ -27,6 +27,11 @@ CITY_SLUGS = {
     "florence":   "florence-firenze-413934",
     "naples":     "naples-napoli-413984",
     "palermo":    "palermo-414996",
+    # Romania: TheFork has limited coverage (primarily international hotels).
+    # Bookingham.ro is the primary local platform for Romania.
+    # These slugs work for the few TheFork-listed restaurants (e.g., Hilton).
+    "bucharest":  "bucharest",  # Falls back to search; limited coverage
+    "bucuresti":  "bucharest",
 }
 
 
