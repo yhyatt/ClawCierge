@@ -39,38 +39,19 @@ from opentable import get_restaurant_search_url as ot_search_url, get_booking_ur
 DEFAULT_USER = {
     "first_name": "Yonatan",
     "last_name": "Hyatt",
-    "email": "os.environ.get("RESERVATION_EMAIL", "your@email.com")",
+    "email": os.environ.get("RESERVATION_EMAIL", "your@email.com"),
     "phone": os.environ.get("RESERVATION_PHONE", "+972500000000"),
     "name": "Yonatan Hyatt",
 }
 
 # ── Platform routing ──────────────────────────────────────────────────────────
-# city (lowercase) → primary platforms in priority order
-CITY_ROUTING = {
-    "tel aviv":   ["ontopo", "tabit"],
-    "tel-aviv":   ["ontopo", "tabit"],
-    "jerusalem":  ["ontopo", "tabit"],
-    "haifa":      ["ontopo", "tabit"],
-    "eilat":      ["ontopo"],
-    "herzliya":   ["ontopo", "tabit"],
+# Derived from city_registry — city alias → primary platforms in priority order
+from city_registry import CITIES
 
-    "marseille":  ["thefork"],
-    "genoa":      ["thefork"],
-    "genova":     ["thefork"],
-    "messina":    ["thefork"],
-    "valletta":   ["thefork"],
-    "rome":       ["thefork"],
-    "barcelona":  ["thefork"],
-    "paris":      ["thefork"],
-    "milan":      ["thefork"],
-    "nice":       ["thefork"],
-
-    "new york":   ["resy", "opentable"],
-    "nyc":        ["resy", "opentable"],
-    "new-york":   ["resy", "opentable"],
-    "los angeles":["opentable"],
-    "chicago":    ["opentable"],
-}
+CITY_ROUTING: dict[str, list[str]] = {}
+for _cfg in CITIES.values():
+    for _alias in _cfg.aliases:
+        CITY_ROUTING[_alias.lower()] = _cfg.reservation_platforms
 
 
 def _get_platforms(city: str) -> list[str]:

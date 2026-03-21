@@ -35,23 +35,18 @@ ALGOLIA_HEADERS = {
     "Origin": "https://guide.michelin.com",
 }
 
-# City slug mappings for Michelin Algolia (must match their city_slug field)
-MICHELIN_CITY_SLUGS = {
-    "marseille":  "marseille",
-    "genoa":      "genova",
-    "genova":     "genova",
-    "messina":    "messina",
-    "valletta":   "valletta",
-    "new york":   "new-york",
-    "new_york":   "new-york",
-    "nyc":        "new-york",
-    "paris":      "paris",
-    "rome":       "rome",
-    "barcelona":  "barcelona",
-    "milan":      "milan",
-    "tel aviv":   None,   # NOT in Michelin index — use Maps
-    "tel_aviv":   None,
-}
+# Import city registry for declarative lookups
+from city_registry import CITIES
+
+# City slug mappings for Michelin Algolia — derived from registry
+# Maps alias → michelin_slug (None if not indexed)
+MICHELIN_CITY_SLUGS: dict[str, str | None] = {}
+for _cfg in CITIES.values():
+    for _alias in _cfg.aliases:
+        MICHELIN_CITY_SLUGS[_alias.lower()] = _cfg.michelin_slug
+        # Also add underscore variants for compatibility
+        MICHELIN_CITY_SLUGS[_alias.lower().replace(" ", "_")] = _cfg.michelin_slug
+        MICHELIN_CITY_SLUGS[_alias.lower().replace("-", "_")] = _cfg.michelin_slug
 
 
 def get_michelin(city: str, bib_only: bool = False, limit: int = 20) -> list[dict]:
@@ -117,19 +112,15 @@ def get_michelin(city: str, bib_only: bool = False, limit: int = 20) -> list[dic
 
 # ── Time Out ─────────────────────────────────────────────────────────────────
 
-TIMEOUT_PATHS = {
-    "new york":   "newyork/restaurants/100-best-new-york-restaurants",
-    "new_york":   "newyork/restaurants/100-best-new-york-restaurants",
-    "nyc":        "newyork/restaurants/100-best-new-york-restaurants",
-    "marseille":  "marseille/en/restaurants/best-restaurants-in-marseille",
-    "london":     "london/restaurants/best-restaurants-in-london",
-    "paris":      "paris/en/restaurants/best-restaurants-in-paris",
-    "rome":       "rome/en/restaurants/best-restaurants-in-rome",
-    "barcelona":  "barcelona/en/restaurants/best-restaurants-in-barcelona",
-    "milan":      "milan/en/restaurants/best-restaurants-in-milan",
-    "tel aviv":   "israel/restaurants",   # closest TLV page
-    "tel_aviv":   "israel/restaurants",
-}
+# Time Out paths — derived from registry
+# Maps alias → timeout_path (only cities with Time Out coverage)
+TIMEOUT_PATHS: dict[str, str] = {}
+for _cfg in CITIES.values():
+    if _cfg.timeout_path:
+        for _alias in _cfg.aliases:
+            TIMEOUT_PATHS[_alias.lower()] = _cfg.timeout_path
+            TIMEOUT_PATHS[_alias.lower().replace(" ", "_")] = _cfg.timeout_path
+            TIMEOUT_PATHS[_alias.lower().replace("-", "_")] = _cfg.timeout_path
 
 
 def get_timeout(city: str, limit: int = 15) -> list[dict]:
@@ -172,15 +163,15 @@ def get_timeout(city: str, limit: int = 15) -> list[dict]:
 # CNT GraphQL needs auth tokens; fallback to scraping their gallery pages.
 # Works for some cities, not all. Silently returns [] if no page found.
 
-CNT_PATHS = {
-    "new york":  ["/gallery/best-new-restaurants-nyc", "/gallery/best-italian-restaurants-in-new-york"],
-    "new_york":  ["/gallery/best-new-restaurants-nyc"],
-    "marseille": ["/story/best-restaurants-marseille"],
-    "paris":     ["/gallery/best-restaurants-in-paris"],
-    "london":    ["/gallery/best-restaurants-in-london"],
-    "rome":      ["/gallery/best-restaurants-in-rome"],
-    "barcelona": ["/gallery/best-restaurants-in-barcelona"],
-}
+# Condé Nast Traveler paths — derived from registry
+# Maps alias → list of CNT paths (only cities with CNT coverage)
+CNT_PATHS: dict[str, list[str]] = {}
+for _cfg in CITIES.values():
+    if _cfg.cnt_paths:
+        for _alias in _cfg.aliases:
+            CNT_PATHS[_alias.lower()] = _cfg.cnt_paths
+            CNT_PATHS[_alias.lower().replace(" ", "_")] = _cfg.cnt_paths
+            CNT_PATHS[_alias.lower().replace("-", "_")] = _cfg.cnt_paths
 
 
 def get_cnt(city: str, limit: int = 10) -> list[dict]:
