@@ -27,18 +27,29 @@ CITY_SLUGS = {
     "florence":   "florence-firenze-413934",
     "naples":     "naples-napoli-413984",
     "palermo":    "palermo-414996",
-    # Romania: TheFork has limited coverage (primarily international hotels).
-    # Bookingham.ro is the primary local platform for Romania.
-    # These slugs work for the few TheFork-listed restaurants (e.g., Hilton).
-    "bucharest":  "bucharest",  # Falls back to search; limited coverage
-    "bucuresti":  "bucharest",
+    # Romania: TheFork has NO city slug for Bucharest (verified 2026-03-21 — citySlug=bucharest
+    # redirects to Paris). Only a handful of international hotels are listed.
+    # Bookingham.ro is the correct primary platform for Romania.
+    # TheFork for Bucharest uses term-based search fallback (see get_city_search_url).
+    "bucharest":  None,
+    "bucuresti":  None,
 }
 
 
 def get_city_search_url(city: str, covers: int = 2, date: str = "", time: str = "") -> str:
-    """Build TheFork search URL for a city with pre-filled party/date/time."""
+    """Build TheFork search URL for a city with pre-filled party/date/time.
+
+    For cities with a known TheFork slug, uses citySlug parameter.
+    For cities without a slug (e.g. Bucharest — no TheFork city page), falls back
+    to a term-based search that at least surfaces any listed restaurants.
+    """
     slug = CITY_SLUGS.get(city.lower(), city.lower())
-    url = f"{BASE}/search?citySlug={slug}&covers={covers}"
+    if slug is None:
+        # No TheFork city slug — use term search (e.g. "restaurants in bucharest")
+        term = requests.utils.quote(f"restaurants in {city.title()}")
+        url = f"{BASE}/search?searchTerm={term}&covers={covers}"
+    else:
+        url = f"{BASE}/search?citySlug={slug}&covers={covers}"
     if date:
         url += f"&date={date}"
     if time:
