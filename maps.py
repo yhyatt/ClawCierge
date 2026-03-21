@@ -840,10 +840,60 @@ CURATED: dict[str, list[dict]] = {
 }
 
 
+def _load_wanttogo_index() -> dict:
+    """Load the wanttogo_by_city.json index if it exists."""
+    from pathlib import Path
+    index_path = Path.home() / ".openclaw" / "workspace" / "memory" / "places" / "wanttogo_by_city.json"
+    if index_path.exists():
+        try:
+            with open(index_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            return {}
+    return {}
+
+
 def get_curated(city: str) -> list[dict]:
-    """Get pre-curated restaurant list for a known city."""
+    """
+    Get pre-curated restaurant list for a known city.
+    
+    Priority:
+    1. Yonatan's personal saves from wanttogo_by_city.json (marked kai_pick=True)
+    2. Hardcoded CURATED entries (community research, Reddit, etc.)
+    
+    Deduplicates by name, personal saves take priority.
+    """
     key = city.lower().replace(" ", "_").replace("-", "_")
-    return CURATED.get(key, [])
+    key_dash = city.lower().replace(" ", "-").replace("_", "-")
+    
+    # 1. Load personal saves from wanttogo index
+    wanttogo = _load_wanttogo_index()
+    personal_saves = wanttogo.get(key_dash, []) or wanttogo.get(key, [])
+    
+    # 2. Get hardcoded curated entries
+    hardcoded = CURATED.get(key, [])
+    
+    # 3. Merge: personal saves first, then hardcoded (dedupe by normalized name)
+    seen_names = set()
+    merged = []
+    
+    # Add personal saves first (highest priority)
+    for entry in personal_saves:
+        name_lower = entry.get("name", "").lower().strip()
+        if name_lower and name_lower not in seen_names:
+            seen_names.add(name_lower)
+            # Ensure kai_pick is set
+            entry["kai_pick"] = True
+            merged.append(entry)
+    
+    # Add hardcoded entries that aren't already in personal saves
+    for entry in hardcoded:
+        name_lower = entry.get("name", "").lower().strip()
+        if name_lower and name_lower not in seen_names:
+            seen_names.add(name_lower)
+            merged.append(entry)
+    
+    return merged
 
 
 def format_curated(city: str, filter_bookable: bool = False) -> str:
