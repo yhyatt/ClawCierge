@@ -63,6 +63,7 @@ avail = tabit.check_availability(org_id="...", date="2026-04-01", time="20:00", 
 
 ## Recommendation Sources
 
+- **Personal Google Maps saves** — reads `memory/places/wanttogo_by_city.json` when available (optional). These are marked `kai_pick: true` and ranked highest. Without this file the skill works normally using community sources only.
 - **Michelin Guide** — Bib Gourmand + Selected/Plate (no stars by default)
 - **Time Out** — city-specific curated lists
 - **Curated lists** — TLV, NYC, Barcelona, Marseille, Genova, Messina, Valletta
@@ -76,7 +77,7 @@ avail = tabit.check_availability(org_id="...", date="2026-04-01", time="20:00", 
 
 ## Supported Cities
 
-Israel (TLV · Haifa · Beer Sheva), Marseille, Genova, Messina, Valletta, NYC, Barcelona, London, Lisbon, Prague, Athens
+Israel (TLV · Haifa · Beer Sheva), Bucharest, Marseille, Genova, Messina, Valletta, NYC, Barcelona, London, Lisbon, Prague, Athens
 
 ## License
 
