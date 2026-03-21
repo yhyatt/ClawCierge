@@ -1,6 +1,7 @@
 ---
 name: clawcierge
-description: Restaurant search and booking for OpenClaw. Finds and books restaurants worldwide — Israel via direct API (Ontopo + Tabit), Europe and NYC via browser handoff (TheFork, OpenTable, Resy). Michelin Bib Gourmand and Time Out recommendations baked in. Use when someone wants to find a restaurant, check availability, or book a table.
+version: 0.2.0
+description: Restaurant search and booking for OpenClaw. Finds and books restaurants worldwide — Israel via direct API (Ontopo + Tabit), Romania via Bookingham.ro, Europe and NYC via browser handoff (TheFork, OpenTable, Resy). Michelin Bib Gourmand and Time Out recommendations baked in. Personal Google Maps saves always surfaced first. Supports Tel Aviv, New York, Barcelona, Bucharest, Marseille, Genova, Messina, Valletta. Use when someone wants to find a restaurant, check availability, or book a table.
 metadata:
   openclaw:
     env:
