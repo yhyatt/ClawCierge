@@ -877,13 +877,24 @@ def get_curated(city: str) -> list[dict]:
     seen_names = set()
     merged = []
     
+    # Determine city-appropriate default booking platform for wanttogo entries
+    try:
+        from .city_registry import get_city
+    except ImportError:
+        from city_registry import get_city
+    city_cfg = get_city(key_dash)
+    default_platform = city_cfg.reservation_platforms[0] if city_cfg and city_cfg.reservation_platforms else None
+
     # Add personal saves first (highest priority)
     for entry in personal_saves:
         name_lower = entry.get("name", "").lower().strip()
         if name_lower and name_lower not in seen_names:
             seen_names.add(name_lower)
-            # Ensure kai_pick is set
+            entry = dict(entry)  # don't mutate the index
             entry["kai_pick"] = True
+            # Enrich with city-appropriate booking platform if missing
+            if not entry.get("booking_platform") and default_platform:
+                entry["booking_platform"] = default_platform
             merged.append(entry)
     
     # Add hardcoded entries that aren't already in personal saves
