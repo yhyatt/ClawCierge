@@ -2,8 +2,11 @@
 Unified Restaurant Reservation Skill
 Integrates Ontopo, Tabit, TheFork, OpenTable and Recommendations.
 """
+import logging
 from . import ontopo, tabit, thefork, opentable, recommender
 import json
+
+_log = logging.getLogger(__name__)
 
 def search_restaurants(city: str, query: str = None, date: str = None, 
                        time: str = None, size: int = 2) -> dict:
@@ -104,7 +107,8 @@ def check_availability_bulk(restaurants: list[dict], date: str,
                 r["display_text"] = f"🔗 {name} ({platform}): Book at {r.get('browser_url')}"
             
             results.append(r)
-        except:
+        except Exception as e:
+            _log.warning("availability check failed for %s: %s", name, e)
             continue
             
     return results

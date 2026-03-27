@@ -17,16 +17,15 @@ Auth:
 import requests
 import time as _time
 from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 
 BRIDGE = "https://bridge.tabit.cloud"
 TGM = "https://tgm-api.tabit.cloud"
 TG_GUID = "E3AE3D44-6FE4-4264-AD3A-54D44119F802"
 ORIGIN = "https://tabitisrael.co.il"
 
-# Israel UTC offset (approximation — DST not handled; TODO)
-# Winter (Oct–Mar): UTC+2   Summer (Mar–Oct): UTC+3
-# For Apr (cruise): UTC+3
-ISRAEL_UTC_OFFSET = 3   # change to 2 in winter
+# Use ZoneInfo for proper DST-aware Israel timezone (UTC+2 winter, UTC+3 summer)
+_IL_TZ = ZoneInfo("Asia/Jerusalem")
 
 
 def _h(with_auth: bool = True, referer_slug: str = None) -> dict:
@@ -43,9 +42,12 @@ def _h(with_auth: bool = True, referer_slug: str = None) -> dict:
 
 
 def _to_utc_iso(date: str, time_str: str) -> str:
-    """Convert 'YYYY-MM-DD', 'HH:MM' (Israel local) → UTC ISO string."""
-    dt = datetime.strptime(f"{date} {time_str}", "%Y-%m-%d %H:%M")
-    dt_utc = dt - timedelta(hours=ISRAEL_UTC_OFFSET)
+    """Convert 'YYYY-MM-DD', 'HH:MM' (Israel local) → UTC ISO string.
+    Uses ZoneInfo for proper DST handling (UTC+2 winter, UTC+3 summer).
+    """
+    dt_naive = datetime.strptime(f"{date} {time_str}", "%Y-%m-%d %H:%M")
+    dt_local = dt_naive.replace(tzinfo=_IL_TZ)
+    dt_utc = dt_local.astimezone(ZoneInfo("UTC"))
     return dt_utc.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 
