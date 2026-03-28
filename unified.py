@@ -48,6 +48,7 @@ DEFAULT_USER = {
 # ── Platform routing ──────────────────────────────────────────────────────────
 # Derived from city_registry — city alias → primary platforms in priority order
 from city_registry import CITIES
+import bars as _bars_mod
 
 CITY_ROUTING: dict[str, list[str]] = {}
 for _cfg in CITIES.values():
@@ -57,6 +58,20 @@ for _cfg in CITIES.values():
 
 def _get_platforms(city: str) -> list[str]:
     return CITY_ROUTING.get(city.lower(), ["thefork", "opentable"])
+
+
+# ── Bars / Nightlife routing ──────────────────────────────────────────────────
+
+def is_bars_query(query: str) -> bool:
+    """Return True if query is about bars, nightlife, or cafés (not restaurants)."""
+    if not query:
+        return False
+    return _bars_mod.detect_bar_type(query) is not None
+
+
+def search_nightlife_and_format(city: str, query: str, top_n: int = 8) -> str:
+    """Entry point for bars/nightlife/café queries. Returns Telegram-ready string."""
+    return _bars_mod.search_nightlife(location=city, query=query, top_n=top_n)
 
 
 # ── Search & Recommend ────────────────────────────────────────────────────────

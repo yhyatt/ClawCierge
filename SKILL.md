@@ -1,7 +1,7 @@
 ---
 name: clawcierge
-version: 0.2.0
-description: Restaurant search and booking for OpenClaw. Finds and books restaurants worldwide — Israel via direct API (Ontopo + Tabit), Romania via Bookingham.ro, Europe and NYC via browser handoff (TheFork, OpenTable, Resy). Michelin Bib Gourmand and Time Out recommendations baked in. Personal Google Maps saves always surfaced first. Supports Tel Aviv, New York, Barcelona, Bucharest, Marseille, Genova, Messina, Valletta. Use when someone wants to find a restaurant, check availability, or book a table.
+version: 0.3.0
+description: Restaurant search and booking for OpenClaw. Finds and books restaurants worldwide — Israel via direct API (Ontopo + Tabit), Romania via Bookingham.ro, Europe and NYC via browser handoff (TheFork, OpenTable, Resy). Michelin Bib Gourmand and Time Out recommendations baked in. Personal Google Maps saves always surfaced first. Bars & nightlife via Foursquare (bars.py). Supports Tel Aviv, New York, Barcelona, Bucharest, Marseille, Genova, Messina, Valletta. Use when someone wants to find a restaurant, bar, café, or nightlife spot.
 metadata:
   openclaw:
     env:
@@ -74,6 +74,21 @@ avail = tabit.check_availability(org_id="...", date="2026-04-01", time="20:00", 
 - **Tabit hold is real** — `check_availability()` creates a ~15 min hold; call `delete_temp_reservation()` on cancel
 - **Ontopo search is read-only** — no hold created
 - **Michelin filter** — always `BIB_GOURMAND` or `selected`; never 1/2/3-star
+
+## Bars & Nightlife
+
+Powered by Foursquare via `bars.py`. Triggered automatically when the query contains bar/nightlife/café keywords.
+
+| Type | Trigger phrases |
+|------|----------------|
+| Bars | "Best bars in Vienna", "bars in Tel Aviv", "nightlife Budapest" |
+| Wine bars | "Wine bars in Tel Aviv", "best wine bar Rome" |
+| Cocktail bars | "Cocktail bars Barcelona", "great cocktails in Lisbon" |
+| Cafés | "Good café for working in Budapest", "coffee shops Prague", "café Vienna" |
+| General | "drinks in Berlin", "pub in London" |
+
+Use `unified.is_bars_query(query)` to detect before routing.
+Use `unified.search_nightlife_and_format(city, query)` for formatted output.
 
 ## Supported Cities
 
