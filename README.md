@@ -8,7 +8,7 @@ Israel via direct API · Europe & NYC via browser handoff · Michelin + Time Out
 
 [![Python](https://img.shields.io/badge/python-3.10+-blue)](https://github.com/yhyatt/clawcierge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![OpenClaw Skill](https://img.shields.io/badge/OpenClaw-Skill-blue)](https://clawhub.com/skills/clawcierge)
+[![OpenClaw Skill](https://img.shields.io/badge/OpenClaw-Skill-blue)](https://github.com/yhyatt/clawcierge)
 
 </div>
 
